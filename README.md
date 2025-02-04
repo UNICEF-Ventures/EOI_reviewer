@@ -74,22 +74,9 @@ The application will be available at `http://localhost:5000`
 5. Navigate between applications using Previous/Next buttons
 6. Export reviews when finished
 
-## Requirements.txt
 
-Create a `requirements.txt` file with the following dependencies:
-```text
-Flask==2.0.1
-pandas==1.3.3
-openpyxl==3.0.9
-```
-
-## Run Script
-
-Create a `run.sh` file with the following content:
-```bash
-#!/bin/bash
-source venv/bin/activate
-python app.py
-```
-
-## License
+The app doesn't update original file, it instead creates a new file in
+`upload/`. Do a quick tally to account for any computer error and manually
+update the file for final reporting. I also added a maybe option, that is for
+me to revisit. This code is
+written using claude AI free version (hah).. so blame it if you see something wrong. Any code complains will be directed to /bin :3
