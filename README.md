@@ -11,8 +11,8 @@ A Flask-based web application for reviewing and evaluating applications with Exc
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
-cd <repository-name>
+git clone https://github.com/UNICEF-Ventures/EOI_reviewer.git
+cd EOI_reviewer
 ```
 
 2. Create a virtual environment (recommended):
@@ -36,7 +36,7 @@ pip install -r requirements.txt
 ```
 .
 ├── app.py                  # Main Flask application
-├── templates/             
+├── templates/
 │   └── review.html        # HTML template for the review page
 ├── uploads/               # Directory for uploaded files (created automatically)
 ├── requirements.txt       # Python dependencies
