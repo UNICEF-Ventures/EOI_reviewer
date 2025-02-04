@@ -78,5 +78,5 @@ The application will be available at `http://localhost:5000`
 The app doesn't update original file, it instead creates a new file in
 `upload/`. Do a quick tally to account for any computer error and manually
 update the file for final reporting. I also added a maybe option, that is for
-me to revisit. This code is
+me to: revisit this company at end and decide. This code is
 written using claude AI free version (hah).. so blame it if you see something wrong. Any code complains will be directed to /bin :3
