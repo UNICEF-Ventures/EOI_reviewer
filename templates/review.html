@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Application Review</title>
+    <style>
+        body {
+            font-family: -apple-system, system-ui, BlinkMacSystemFont;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .info-item {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+        }
+        .card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 24px;
+            margin: 20px 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .section {
+            margin: 20px 0;
+        }
+        .section-title {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
+            font-size: 1.4em;
+        }
+        .field {
+            margin: 12px 0;
+        }
+        .field-label {
+            color: #6b7280;
+            font-size: 0.9em;
+            margin-bottom: 4px;
+        }
+        .field-value {
+            line-height: 1.5;
+        }
+        .field-value a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+        .field-value a:hover {
+            text-decoration: underline;
+        }
+        .eval-buttons {
+            display: flex;
+            gap: 12px;
+            margin: 16px 0;
+        }
+        .eval-button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .yes { background-color: #22c55e; color: white; }
+        .maybe { background-color: #eab308; color: white; }
+        .no { background-color: #ef4444; color: white; }
+        .selected { opacity: 1; }
+        .unselected { opacity: 0.6; }
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .status-green { background-color: #22c55e; }
+        .status-yellow { background-color: #eab308; }
+        .status-red { background-color: #ef4444; }
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            margin: 8px 0;
+            font-family: inherit;
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 24px;
+        }
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            background: #2563eb;
+            color: white;
+            cursor: pointer;
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    {% if not app %}
+        <form method="post" enctype="multipart/form-data">
+            <h2>Applications for Tech Evaluator: {{ reviewer.evaluator }}</h2>
+            <div class="file-upload">
+                <input type="file" name="file" accept=".xlsx,.xls">
+                <button type="submit">Upload</button>
+            </div>
+        </form>
+    {% else %}
+        <div class="card">
+            <h2>Application Review ({{ current }}/{{ total }})</h2>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="field-label">Company</div>
+                    <div class="field-value">{{ app['Name of company:'] }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="field-label">Country</div>
+                    <div class="field-value">{{ app['In which country is your company legally registered?'] }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="field-label">Open Source Status</div>
+                    <div class="field-value">
+                        {% if app['open_source_status'] == 'open' %}
+                            <span class="status-indicator status-green"></span>{{ app['Is your solution Open Source?'] }}
+                        {% else %}
+                            <span class="status-indicator status-yellow"></span>{{ app['Is your solution Open Source?'] }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Solution Overview</div>
+                <div class="field">
+                    <div class="field-label">Addressing Areas</div>
+                    <div class="field-value">{{ app['Which of the following is your solution addressing? (select all that apply)'] }}</div>
+                </div>
+                <div class="field">
+                    <div class="field-label">Challenge</div>
+                    <div class="field-value">{{ app['What need or challenge is your solution addressing in your local context?'] }}</div>
+                </div>
+                <div class="field">
+                    <div class="field-label">Solution Description</div>
+                    <div class="field-value">{{ app['Describe the solution you are proposing and how it is solving the challenges you described in the previous question:'] }}</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Technical Details</div>
+                <div class="field">
+                    <div class="field-label">Technology Implementation</div>
+                    <div class="field-value">{{ app['How you are using the technology(ies)?'] }}</div>
+                </div>
+                <div class="field">
+                    <div class="field-label">Testing Results</div>
+                    <div class="field-value">{{ app['Describe the results of your initial testing and prototyping (quantitative and qualitative):'] }}</div>
+                </div>
+                <div class="field">
+                    <div class="field-label">Repository</div>
+                    <div class="field-value">
+                        {% if app['Provide a link to the GitHub or other open repository for your solution:'] %}
+                            <a href="{{ app['Provide a link to the GitHub or other open repository for your solution:'] }}" target="_blank">View Repository</a>
+                        {% else %}
+                            Not provided
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Project Plan & Resources</div>
+                <div class="field">
+                    <div class="field-label">12-Month Milestones</div>
+                    <div class="field-value">{{ app['What are your project targets/milestones for the next 12 months?:'] }}</div>
+                </div>
+                <div class="field">
+                    <div class="field-label">Partners & Advisors</div>
+                    <div class="field-value">{{ app['Who are your key partners and advisors (only list actual partners, write NA if non-existent)'] }}</div>
+                </div>
+                <div class="field">
+                    <div class="field-label">Project Resources</div>
+                    <div class="field-value">{{ app['Provide an overview of the capital and other contributions to the project (capital, human resources, assets, other investments and loans)'] }}</div>
+                </div>
+                <div class="field">
+                    <div class="field-label">Demo Video</div>
+                    <div class="field-value">
+                        {% if app['Upload the video to YouTube and provide the link in this response form:'] %}
+                            <a href="{{ app['Upload the video to YouTube and provide the link in this response form:'] }}" target="_blank">Watch Video</a>
+                        {% else %}
+                            Not provided
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <form method="post">
+                <div class="section">
+                    <div class="section-title">Your Evaluation</div>
+                    <div class="eval-buttons">
+                        <input type="radio" name="evaluation" value="Yes" id="yes" {% if evaluation == 'Yes' %}checked{% endif %}>
+                        <label for="yes" class="eval-button yes {% if evaluation == 'Yes' %}selected{% else %}unselected{% endif %}">Yes</label>
+
+                        <input type="radio" name="evaluation" value="Maybe" id="maybe" {% if evaluation == 'Maybe' %}checked{% endif %}>
+                        <label for="maybe" class="eval-button maybe {% if evaluation == 'Maybe' %}selected{% else %}unselected{% endif %}">Maybe</label>
+
+                        <input type="radio" name="evaluation" value="No" id="no" {% if evaluation == 'No' %}checked{% endif %}>
+                        <label for="no" class="eval-button no {% if evaluation == 'No' %}selected{% else %}unselected{% endif %}">No</label>
+                    </div>
+
+                    <div class="section-title">Your Comment</div>
+                    <textarea name="comment" placeholder="Enter your evaluation comments here...">{{ comment }}</textarea>
+                </div>
+
+                <div class="nav-buttons">
+                    <button type="submit" name="prev" {% if current == 1 %}disabled{% endif %}>Previous</button>
+                    <button type="submit" name="export">Export Reviews</button>
+                    <button type="submit" name="next" {% if current == total %}disabled{% endif %}>Next</button>
+                </div>
+            </form>
+        </div>
+    {% endif %}
+</body>
+</html>

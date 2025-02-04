@@ -1,0 +1,1 @@
+recursive-include application_review_system/templates * 
